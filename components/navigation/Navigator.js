@@ -14,7 +14,11 @@ export default function Navigator() {
           component={LoginScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{title: 'Đăng ký'}}
+        />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
