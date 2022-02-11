@@ -28,6 +28,7 @@ export default function Register({navigation}) {
     if (password === rePassword) {
       createUserWithEmailAndPassword(auth, email, password)
         .then(re => {
+          console.log(re);
           setIsLoading(false);
           Alert.alert('Đăng ký thành công', 'Chào mừng bạn!', [
             {

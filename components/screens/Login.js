@@ -1,8 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
-  Button,
   StyleSheet,
   Alert,
   ActivityIndicator,
@@ -18,17 +17,15 @@ import {
 } from 'react-native';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '../../firebase/firebase-config';
-import {UserContext} from '../context/userContext';
-import {getKeychain, storeKeychain} from '../Keychain';
+import useUser from '../context/userContext';
+import {storeKeychain} from '../Keychain';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const {setUserInfo} = useContext(UserContext);
-  useEffect(() => {
-    getKeychain({setUserInfo, navigation});
-  }, []);
+  const {setUserInfo} = useUser();
+
   const loginUser = () => {
     setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
@@ -38,7 +35,6 @@ export default function LoginScreen({navigation}) {
         setPassword('');
         setIsLoading(false);
         storeKeychain(email, re);
-        navigation.navigate('Home');
       })
       .catch(er => {
         Alert.alert(

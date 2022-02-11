@@ -1,8 +1,7 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
-  Button,
   TextInput,
   StyleSheet,
   TouchableOpacity,
@@ -15,7 +14,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import {UserContext} from '../context/userContext';
+import useUser from '../context/userContext';
 import {signOut} from 'firebase/auth';
 import {auth, db} from '../../firebase/firebase-config';
 import {
@@ -32,7 +31,7 @@ import {deleteKeychain} from '../Keychain';
 
 export default function Home({navigation}) {
   const isMounted = useRef(false);
-  const {userInfo} = useContext(UserContext);
+  const {userInfo, setUserInfo} = useUser();
   const [todo, setTodo] = useState('');
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -78,7 +77,8 @@ export default function Home({navigation}) {
           signOut(auth)
             .then(() => {
               deleteKeychain();
-              navigation.navigate('Login');
+              setUserInfo(false);
+              //navigation.navigate('Login');
             })
             .catch(error => {
               console.log(error);
@@ -88,14 +88,17 @@ export default function Home({navigation}) {
     ]);
   };
   const addTodoHandler = async () => {
-    await setDoc(doc(db, uid, todoId), {
-      id: todoId,
-      uid: uid,
-      todo: todo,
-      createAt: dateTime,
-    });
     setTodo('');
-    getData(db);
+    const text = todo.trim();
+    if (text) {
+      await setDoc(doc(db, uid, todoId), {
+        id: todoId,
+        uid: uid,
+        todo: text,
+        createAt: dateTime,
+      });
+      getData(db);
+    }
   };
   const deleteTodoHandler = id => {
     Alert.alert(

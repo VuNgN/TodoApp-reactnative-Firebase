@@ -1,6 +1,7 @@
 import * as Keychain from 'react-native-keychain';
-export async function getKeychain({setUserInfo, navigation}) {
+export async function getKeychain(setUserInfo, setIsLoading) {
   try {
+    setIsLoading(true);
     // Retrieve the credentials
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
@@ -9,10 +10,10 @@ export async function getKeychain({setUserInfo, navigation}) {
       );
       const user = JSON.parse(credentials.password);
       setUserInfo(user);
-      navigation.navigate('Home');
     } else {
       console.log('No credentials stored');
     }
+    setIsLoading(false);
   } catch (error) {
     console.log("Keychain couldn't be accessed!", error);
   }

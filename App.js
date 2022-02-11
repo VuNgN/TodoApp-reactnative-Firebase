@@ -8,7 +8,7 @@
 
 import React from 'react';
 import Navigator from './components/navigation/Navigator';
-import UserContextProvider from './components/context/userContext';
+import {UserContextProvider} from './components/context/userContext';
 import {StatusBar} from 'react-native';
 
 const App = () => {
