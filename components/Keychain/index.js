@@ -4,9 +4,6 @@ export async function getKeychain(setUserInfo, setIsLoading) {
     setIsLoading(true);
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
-      console.log(
-        'Credentials successfully loaded for user ' + credentials.username,
-      );
       const user = JSON.parse(credentials.password);
       setUserInfo(user);
     } else {
