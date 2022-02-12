@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   TextInput,
@@ -21,6 +21,7 @@ import useUser from '../context/userContext';
 import {storeKeychain} from '../Keychain';
 
 export default function LoginScreen({navigation}) {
+  const isMounted = useRef(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,11 +31,13 @@ export default function LoginScreen({navigation}) {
     setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then(re => {
-        setUserInfo(re);
-        setEmail('');
-        setPassword('');
-        setIsLoading(false);
-        storeKeychain(email, re);
+        if (isMounted.current) {
+          setUserInfo(re);
+          setEmail('');
+          setPassword('');
+          setIsLoading(false);
+          storeKeychain(email, re);
+        }
       })
       .catch(() => {
         Alert.alert(
@@ -50,6 +53,11 @@ export default function LoginScreen({navigation}) {
         setIsLoading(false);
       });
   };
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

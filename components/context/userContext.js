@@ -1,4 +1,10 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {Dimensions, Image, StyleSheet} from 'react-native';
 import {getKeychain} from '../Keychain';
 
@@ -8,7 +14,11 @@ export function UserContextProvider({children}) {
   const [userInfo, setUserInfo] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    getKeychain(setUserInfo, setIsLoading);
+    let isMounted = true;
+    getKeychain(isMounted, setUserInfo, setIsLoading);
+    return () => {
+      isMounted = false;
+    };
   }, []);
   return (
     <UserContext.Provider value={{userInfo, setUserInfo}}>

@@ -127,7 +127,7 @@ export default function Home() {
           style={styles.addBtn}
           onPress={() => deleteTodoHandler(item.id)}
           activeOpacity={0.6}>
-          <Text style={styles.addBtnText}>Done</Text>
+          <Text style={styles.addBtnText}>Đã xong</Text>
         </TouchableOpacity>
       </View>
     );
@@ -149,7 +149,7 @@ export default function Home() {
           <View style={styles.todoWrapper}>
             <View style={styles.header}>
               <Text style={styles.titleText}>
-                Welcome {userInfo.user.email}
+                Xin chào {userInfo.user.email}
               </Text>
               <TouchableOpacity
                 style={styles.signOut}
@@ -181,7 +181,7 @@ export default function Home() {
                 style={styles.addBtn}
                 onPress={addTodoHandler}
                 activeOpacity={0.6}>
-                <Text style={styles.addBtnText}>Add</Text>
+                <Text style={styles.addBtnText}>Thêm</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 5,
   },
   addBtnText: {color: 'white', fontSize: 16},
   itemSwapper: {
