@@ -23,6 +23,24 @@ export default function Register({navigation}) {
   const [isMatched, setIsMatched] = useState(true);
   const [errorPassLessThan6, setErrorPassLessThan6] = useState('');
   const [errorRePassLessThan6, setErrorRePassLessThan6] = useState('');
+  const [isInvalidEmail, setIsInvalidEmail] = useState(true);
+  const isDisabled =
+    !email ||
+    !password ||
+    !rePassword ||
+    isInvalidEmail ||
+    errorRePassLessThan6 ||
+    errorPassLessThan6 ||
+    !isMatched;
+  const valiEmailHandler = val => {
+    let regEmail =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!regEmail.test(val)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   const registerUser = () => {
     setIsLoading(true);
     if (password === rePassword) {
@@ -41,8 +59,8 @@ export default function Register({navigation}) {
         })
         .catch(er => {
           Alert.alert(
-            'Đăng ký thất bại',
-            'Lưu ý, email phải hợp lệ, mật khẩu phải có từ 6 ký tự trở lên và không được để trống trường nào!',
+            'Có gì đó sai sai',
+            'Email đã được đăng ký. Vui lòng thử lại',
             [
               {
                 text: 'Xem lại',
@@ -78,6 +96,7 @@ export default function Register({navigation}) {
     }
   };
   useEffect(() => {
+    setIsInvalidEmail(valiEmailHandler(email));
     if (password.length >= 6 && rePassword.length >= 6) {
       if (password !== rePassword) {
         setIsMatched(false);
@@ -147,9 +166,10 @@ export default function Register({navigation}) {
         </View>
         <View style={styles.btnSwrapper}>
           <TouchableOpacity
-            style={styles.loginBtn}
+            style={isDisabled ? styles.disableRegisterBtn : styles.registerBtn}
             onPress={registerUser}
-            activeOpacity={0.6}>
+            activeOpacity={0.6}
+            disabled={isDisabled}>
             {isLoading ? (
               <ActivityIndicator color="white" />
             ) : (
@@ -203,15 +223,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  loginBtn: {
+  registerBtn: {
     ...btn,
     backgroundColor: 'green',
   },
-  registerBtn: {
+  disableRegisterBtn: {
     ...btn,
-    borderColor: 'green',
-    borderStyle: 'solid',
-    borderWidth: 2,
+    backgroundColor: 'gray',
+    color: 'black',
   },
   textBtn: {
     color: 'white',

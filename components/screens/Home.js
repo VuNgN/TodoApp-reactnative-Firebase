@@ -24,12 +24,11 @@ import {
   setDoc,
   deleteDoc,
 } from 'firebase/firestore/lite';
-import nextId from 'react-id-generator';
 import uuid from 'react-native-uuid';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {deleteKeychain} from '../Keychain';
 
-export default function Home({navigation}) {
+export default function Home() {
   const isMounted = useRef(false);
   const {userInfo, setUserInfo} = useUser();
   const [todo, setTodo] = useState('');
@@ -78,7 +77,6 @@ export default function Home({navigation}) {
             .then(() => {
               deleteKeychain();
               setUserInfo(false);
-              //navigation.navigate('Login');
             })
             .catch(error => {
               console.log(error);
@@ -120,7 +118,7 @@ export default function Home({navigation}) {
       ],
     );
   };
-  const renderItem = ({item, index}) => {
+  const renderItem = ({item}) => {
     return (
       <View style={styles.itemSwapper}>
         <Text style={styles.itemContent}>{item.todo}</Text>
@@ -201,7 +199,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    //justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   signOut: {

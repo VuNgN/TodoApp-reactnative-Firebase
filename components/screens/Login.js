@@ -36,7 +36,7 @@ export default function LoginScreen({navigation}) {
         setIsLoading(false);
         storeKeychain(email, re);
       })
-      .catch(er => {
+      .catch(() => {
         Alert.alert(
           'Đăng nhập thất bại',
           'Tài khoản hoặc mật khẩu không chính xác',

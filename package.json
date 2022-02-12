@@ -14,7 +14,6 @@
     "@react-navigation/native-stack": "^6.5.0",
     "firebase": "^9.6.6",
     "react": "17.0.2",
-    "react-id-generator": "^3.0.2",
     "react-native": "0.67.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-keychain": "^8.0.0",

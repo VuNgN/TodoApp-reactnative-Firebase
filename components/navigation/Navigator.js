@@ -8,7 +8,6 @@ import useUser from '../context/userContext';
 const Stack = createNativeStackNavigator();
 export default function Navigator() {
   const {userInfo} = useUser();
-
   return (
     <NavigationContainer>
       <Stack.Navigator>

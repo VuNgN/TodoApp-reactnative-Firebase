@@ -2,7 +2,6 @@ import * as Keychain from 'react-native-keychain';
 export async function getKeychain(setUserInfo, setIsLoading) {
   try {
     setIsLoading(true);
-    // Retrieve the credentials
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(
