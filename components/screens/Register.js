@@ -23,7 +23,7 @@ export default function Register({navigation}) {
   const [isMatched, setIsMatched] = useState(true);
   const [errorPassLessThan6, setErrorPassLessThan6] = useState('');
   const [errorRePassLessThan6, setErrorRePassLessThan6] = useState('');
-  const [isInvalidEmail, setIsInvalidEmail] = useState(true);
+  const [isInvalidEmail, setIsInvalidEmail] = useState(false);
   const isDisabled =
     !email ||
     !password ||
@@ -96,7 +96,6 @@ export default function Register({navigation}) {
     }
   };
   useEffect(() => {
-    setIsInvalidEmail(valiEmailHandler(email));
     if (password.length >= 6 && rePassword.length >= 6) {
       if (password !== rePassword) {
         setIsMatched(false);
@@ -126,10 +125,13 @@ export default function Register({navigation}) {
         />
         <View style={styles.inputSwrapper}>
           <TextInput
-            style={styles.textInput}
+            style={isInvalidEmail ? styles.errorTextInput : styles.textInput}
             placeholder="Email"
             value={email}
             onChangeText={text => setEmail(text)}
+            onEndEditing={() => {
+              setIsInvalidEmail(valiEmailHandler(email));
+            }}
           />
           <Text />
           <TextInput
