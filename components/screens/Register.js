@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   TextInput,
@@ -16,6 +16,7 @@ import {auth} from '../../firebase/firebase-config';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export default function Register({navigation}) {
+  const isMounted = useRef(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
@@ -42,80 +43,90 @@ export default function Register({navigation}) {
     }
   };
   const registerUser = () => {
-    setIsLoading(true);
-    if (password === rePassword) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(re => {
-          console.log(re);
-          setIsLoading(false);
-          Alert.alert('Đăng ký thành công', 'Chào mừng bạn!', [
-            {
-              text: 'Đăng nhập',
-              onPress: () => console.log('ok pressed'),
-            },
-          ]);
-
-          navigation.navigate('Login');
-        })
-        .catch(er => {
-          Alert.alert(
-            'Có gì đó sai sai',
-            'Email đã được đăng ký. Vui lòng thử lại',
-            [
+    if (isMounted.current) {
+      setIsLoading(true);
+      if (password === rePassword) {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(re => {
+            setIsLoading(false);
+            Alert.alert('Đăng ký thành công', 'Chào mừng bạn!', [
               {
-                text: 'Xem lại',
-                onPress: () => console.log('ok pressed'),
+                text: 'Đăng nhập',
+                onPress: () => {},
               },
-            ],
-          );
-          setIsLoading(false);
-        });
-    } else {
-      Alert.alert('Đăng ký thất bại', 'Mật khẩu không trùng nhau', [
-        {
-          text: 'Xem lại',
-          onPress: () => console.log('ok pressed'),
-        },
-      ]);
-      setIsLoading(false);
+            ]);
+
+            navigation.navigate('Login');
+          })
+          .catch(er => {
+            Alert.alert(
+              'Có gì đó sai sai',
+              'Email đã được đăng ký. Vui lòng thử lại',
+              [
+                {
+                  text: 'Xem lại',
+                  onPress: () => {},
+                },
+              ],
+            );
+            setIsLoading(false);
+          });
+      } else {
+        Alert.alert('Đăng ký thất bại', 'Mật khẩu không trùng nhau', [
+          {
+            text: 'Xem lại',
+            onPress: () => {},
+          },
+        ]);
+        setIsLoading(false);
+      }
     }
   };
   const errorHandler = (text, index) => {
-    if (index === 1) {
-      if (text.length < 6) {
-        setErrorPassLessThan6('Mật khẩu cần nhiều hơn 6 ký tự');
+    if (isMounted.current) {
+      if (index === 1) {
+        if (text.length < 6) {
+          setErrorPassLessThan6('Mật khẩu cần nhiều hơn 6 ký tự');
+        } else {
+          if (isMatched) setErrorPassLessThan6('');
+        }
       } else {
-        if (isMatched) setErrorPassLessThan6('');
-      }
-    } else {
-      if (text.length < 6)
-        setErrorRePassLessThan6('Nhập lại mật khẩu cần nhiều hơn 6 ký tự');
-      else {
-        if (isMatched) setErrorRePassLessThan6('');
+        if (text.length < 6)
+          setErrorRePassLessThan6('Nhập lại mật khẩu cần nhiều hơn 6 ký tự');
+        else {
+          if (isMatched) setErrorRePassLessThan6('');
+        }
       }
     }
   };
   useEffect(() => {
-    if (password.length >= 6 && rePassword.length >= 6) {
-      if (password !== rePassword) {
-        setIsMatched(false);
-      } else {
-        setIsMatched(true);
-      }
-      if (!isMatched) {
-        setErrorPassLessThan6(' ');
-        setErrorRePassLessThan6(
-          'Mật khẩu và nhập lại mật khẩu không giống nhau!',
-        );
-      } else {
-        setErrorPassLessThan6('');
-        setErrorRePassLessThan6('');
+    if (isMounted.current) {
+      if (password.length >= 6 && rePassword.length >= 6) {
+        if (password !== rePassword) {
+          setIsMatched(false);
+        } else {
+          setIsMatched(true);
+        }
+        if (!isMatched) {
+          setErrorPassLessThan6(' ');
+          setErrorRePassLessThan6(
+            'Mật khẩu và nhập lại mật khẩu không giống nhau!',
+          );
+        } else {
+          setErrorPassLessThan6('');
+          setErrorRePassLessThan6('');
+        }
       }
     }
     return () => {
       setIsMatched(true);
     };
   });
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   return (
     <KeyboardAwareScrollView>
       <SafeAreaView style={styles.container}>
